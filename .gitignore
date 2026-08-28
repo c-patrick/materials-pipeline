@@ -1,0 +1,32 @@
+# Virtual environment
+.venv/
+
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+build/
+
+# Tests and tools
+.pytest_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Jupyter
+.ipynb_checkpoints/
+
+# Secrets and local configuration
+.env
+.env.*
+
+# Generated pipeline data
+data/raw/*
+data/normalised/*
+data/rejected/*
+
+# Keep the directories present in Git
+!data/raw/.gitkeep
+!data/normalised/.gitkeep
+!data/rejected/.gitkeep
