@@ -25,6 +25,16 @@ The project currently includes a simple provider adapter for Materials Project r
 
 The pipeline design is intentionally extensible so additional providers can be added in the same pattern.
 
+## New features
+
+Since the initial commit, the pipeline has gained several practical features useful for ingestion and provenance tracking:
+- Preserve and persist the original source material (raw JSON) alongside any normalised output.
+- Write both raw and normalised data files to disk under the `data/` directory so ingestion runs are auditable and reproducible.
+- Generate a SHA256 checksum for each ingested source and include it with the normalised record to help detect duplicates and verify integrity.
+- Produce a typed `MaterialRecord` (Pydantic) as the canonical, provider-agnostic representation returned by provider adapters.
+
+These behaviors are implemented in the pipeline and storage helpers; see the implementation in [src/materials_pipeline/pipeline.py](src/materials_pipeline/pipeline.py#L1), [src/materials_pipeline/storage.py](src/materials_pipeline/storage.py#L1), and the canonical models in [src/materials_pipeline/models.py](src/materials_pipeline/models.py#L1).
+
 ## Getting started
 
 ### 1. Create and activate a virtual environment
@@ -50,8 +60,18 @@ pytest -q
 ### 4. Try a minimal transform
 
 ```python
+from pathlib import Path
 from materials_pipeline.providers.materials_project import MaterialsProjectProvider
+from materials_pipeline.pipeline import IngestionPipeline
 
+# Set the project root (where `data/` will be created)
+project_root = Path('.')
+
+# Create the ingestion pipeline and provider adapter
+pipeline = IngestionPipeline(project_root)
+provider = MaterialsProjectProvider()
+
+# Example raw provider record (this is preserved to `data/raw/...`)
 raw = {
     'material_id': 'mp-149',
     'formula_pretty': 'Si',
@@ -59,8 +79,27 @@ raw = {
     'structure': None,
 }
 
-record = MaterialsProjectProvider().transform(raw)
-print(record.model_dump())
+# Ingest the raw record. This will:
+# - compute a SHA256 of the provider payload
+# - write the raw envelope to `data/raw/<provider>/<source_id>/<timestamp>.json`
+# - transform to a `MaterialRecord`
+# - write the normalised record to `data/normalised/<record_id>.json`
+result = pipeline.ingest(provider, raw)
+
+print(result.status)
+print('raw ->', result.raw_path)
+print('normalised ->', result.normalised_path)
+
+# Inspect the canonical MaterialRecord
+if result.material is not None:
+    print(result.material.record_id, result.material.composition.reduced_formula)
+
+# Read the preserved raw envelope to view the computed checksum
+if result.raw_path:
+    import json
+
+    envelope = json.loads(Path(result.raw_path).read_text(encoding='utf-8'))
+    print('payload_sha256:', envelope.get('payload_sha256'))
 ```
 
 This returns a normalised material record with a reduced formula, chemical system, and source metadata.
@@ -70,9 +109,10 @@ This returns a normalised material record with a reduced formula, chemical syste
 ```text
 materials-pipeline/
 ├── data/
-│   ├── raw/
-│   ├── normalised/
-│   └── rejected/
+│   ├── raw/           # preserved original provider JSON files
+    │   ├── materials_project/
+│   ├── normalised/    # returned canonical MaterialRecord JSON files
+│   └── rejected/      # invalid or unparseable inputs
 ├── notebooks/
 │   └── 01_basic_pipeline.ipynb
 ├── src/
