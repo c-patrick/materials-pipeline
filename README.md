@@ -65,7 +65,7 @@ from materials_pipeline.providers.materials_project import MaterialsProjectProvi
 from materials_pipeline.pipeline import IngestionPipeline
 
 # Set the project root (where `data/` will be created)
-project_root = Path('.')
+project_root = Path(".")
 
 # Create the ingestion pipeline and provider adapter
 pipeline = IngestionPipeline(project_root)
@@ -73,10 +73,10 @@ provider = MaterialsProjectProvider()
 
 # Example raw provider record (this is preserved to `data/raw/...`)
 raw = {
-    'material_id': 'mp-149',
-    'formula_pretty': 'Si',
-    'chemsys': 'Si',
-    'structure': None,
+    "material_id": "mp-149",
+    "formula_pretty": "Si",
+    "chemsys": "Si",
+    "structure": None,
 }
 
 # Ingest the raw record. This will:
@@ -87,8 +87,8 @@ raw = {
 result = pipeline.ingest(provider, raw)
 
 print(result.status)
-print('raw ->', result.raw_path)
-print('normalised ->', result.normalised_path)
+print("raw ->", result.raw_path)
+print("normalised ->", result.normalised_path)
 
 # Inspect the canonical MaterialRecord
 if result.material is not None:
@@ -98,8 +98,8 @@ if result.material is not None:
 if result.raw_path:
     import json
 
-    envelope = json.loads(Path(result.raw_path).read_text(encoding='utf-8'))
-    print('payload_sha256:', envelope.get('payload_sha256'))
+    envelope = json.loads(Path(result.raw_path).read_text(encoding="utf-8"))
+    print("payload_sha256:", envelope.get("payload_sha256"))
 ```
 
 This returns a normalised material record with a reduced formula, chemical system, and source metadata.

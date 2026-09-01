@@ -10,6 +10,8 @@ requires-python = ">=3.11"
 dependencies = [
     "pydantic>=2.0,<3.0",
     "pymatgen",
+    "mp_api",
+    "python-dotenv",
 ]
 
 [project.optional-dependencies]
