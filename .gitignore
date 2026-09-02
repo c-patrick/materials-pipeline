@@ -30,3 +30,6 @@ data/rejected/*
 !data/raw/.gitkeep
 !data/normalised/.gitkeep
 !data/rejected/.gitkeep
+
+# Additional ignore patterns for CCDC / CSD Python API
+*csd*

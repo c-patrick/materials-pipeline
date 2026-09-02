@@ -49,7 +49,7 @@ class MaterialsProjectAPIAdapter:
             if data:
                 entry = data[0]
                 formula = entry.formula_pretty
-                chemsys = entry.chemsys
+                chemsys = entry.chemsys # Chemsys should be native to Materials Project, so no need to import compute_chemsys here
 
                 # Try to obtain a structure when available
                 try:

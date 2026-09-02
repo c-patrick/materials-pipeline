@@ -153,6 +153,26 @@ pipeline.
     If you prefer, the adapter can be run against mocked responses (see the tests
     under `tests/` for examples of how the client is monkeypatched during testing).
 
+### NOMAD ingest via public API
+
+A small demo notebook shows how to fetch and ingest a NOMAD entry using the
+`NOMADAPIAdapter` and the `NomadProvider` normaliser.
+
+- **No API key required:** the public NOMAD instance used in this demo does not
+    require authentication. The adapter performs a GET against the public NOMAD
+    REST endpoint by default. If you prefer an offline or deterministic demo you
+    can inject a fake client (see `tests/test_nomad_api_adapter.py`).
+
+- **Interactive demo:** open the notebook `notebooks/03_demo_nomad_ingest.ipynb`
+    in Jupyter Lab / Notebook and run the cells. The notebook will fetch a
+    representative NOMAD `entry_id`, preserve the raw payload under `data/raw/...`,
+    and write a normalised `MaterialRecord` to `data/normalised/`.
+
+- **Notes:** the adapter is client-agnostic and supports an injected client for
+    testing. See `src/materials_pipeline/providers/nomad_api.py` for the mapping
+    logic and `src/materials_pipeline/providers/nomad.py` for the provider
+    transformation that produces the canonical `MaterialRecord`.
+
 ## Next ideas
 
 - Add another provider such as CSD or NOMAD
