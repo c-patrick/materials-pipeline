@@ -130,6 +130,29 @@ materials-pipeline/
 └── .gitignore
 ```
 
+## Demo Notebooks
+### Materials Project API
+
+This project includes a small API adapter and a demo notebook that shows how to fetch
+provider-native records from the Materials Project and ingest them through the
+pipeline.
+
+- **Provide an API key:** set your Materials Project API key in the `MP_API_KEY`
+    environment variable. Example (Linux/macOS):
+
+    ```bash
+    export MP_API_KEY=your_materials_project_api_key_here
+    ```
+
+- **Interactive demo:** open the notebook `notebooks/02_demo_materials_project_ingest.ipynb`
+    in Jupyter Lab / Notebook and run the cells. The notebook will fetch `mp-149` by
+    default, preserve the raw payload under `data/raw/...`, and write a normalised
+    record to `data/normalised/`.
+
+- **Notes:** the demo uses the `mp_api` client (the `mp_api` Python package).
+    If you prefer, the adapter can be run against mocked responses (see the tests
+    under `tests/` for examples of how the client is monkeypatched during testing).
+
 ## Next ideas
 
 - Add another provider such as CSD or NOMAD
