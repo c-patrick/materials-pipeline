@@ -44,7 +44,7 @@ python -m venv .venv
 source .venv/bin/activate
 ```
 
-### 2. Install the package in editable mode
+### 2. Install the package
 
 ```bash
 pip install --upgrade pip
@@ -57,7 +57,7 @@ pip install -e '.[dev]'
 pytest -q
 ```
 
-### 4. Try a minimal transform
+### 4. Run a test ingestion using an example record
 
 ```python
 from pathlib import Path
@@ -109,7 +109,7 @@ This returns a normalised material record with a reduced formula, chemical syste
 ```text
 materials-pipeline/
 ├── data/
-│   ├── raw/           # preserved original provider JSON files
+│   ├── raw/           # preserved original provider JSON files, segregated by provider
     │   ├── materials_project/
 │   ├── normalised/    # returned canonical MaterialRecord JSON files
 │   └── rejected/      # invalid or unparseable inputs
