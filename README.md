@@ -51,6 +51,8 @@ pip install --upgrade pip
 pip install -e '.[dev]'
 ```
 
+> **Note:** On Microsoft Windows, you will need to install [Microsoft C++ Build Tools](https://visualstudio.microsoft.com/visual-cpp-build-tools/) prior in installing this package.
+
 ### 3. Run the test suite
 
 ```bash
